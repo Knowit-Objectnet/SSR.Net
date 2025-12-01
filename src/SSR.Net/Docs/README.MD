@@ -9,6 +9,6 @@ It has DLLs for .Net Standard 2.0 and .Net 7/8/9 to support everything from .Net
 
 Performance is optimized through proactive JavaScript engine preparation, engine reuse and smart scheduling.
 
-See examples and read more in the documentation on GitHub: https://github.com/knowit/SSR.Net
+See examples and read more in the documentation on GitHub: https://github.com/Knowit-Objectnet/SSR.Net
 
 It is based on many of the ideas in ReactJS.Net: https://github.com/reactjs/React.NET

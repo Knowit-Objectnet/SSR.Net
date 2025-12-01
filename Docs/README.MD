@@ -2,7 +2,7 @@
 SSR.Net
 ============
 
-SSR.Net enables you to Server-Side Render (SSR) components in React 17, React 18 and Vue 3 in .Net Framework/Core/5/6/7/8/9. It is open for extension and can support other frontend frameworks. It aims at being a performant, minimalistic way to support SSR in .Net. 
+SSR.Net enables you to Server-Side Render (SSR) components in React 17, React 18, React 19 and Vue 3 in .Net Framework/Core/5/6/7/8/9. It is open for extension and can support other frontend frameworks. It aims at being a performant, minimalistic way to support SSR in .Net. 
 
 It is based on many of the ideas in ReactJS.Net: https://github.com/reactjs/React.NET.
 
@@ -16,11 +16,11 @@ This library can be installed through NuGet. You will also need to install a Jav
 ## Configuration and usage
 
 The easiest way to get started is to copy or look at one of the example projects:
-* For .Net Framework: https://github.com/knowit/SSR.Net/tree/main/src/SSR.Net.DotNetFramework
-* For .Net 8: https://github.com/knowit/SSR.Net/tree/main/src/SSR.Net.DotNet8
-* Example frontend for React 18: https://github.com/knowit/SSR.Net/tree/main/src/Frontend/React18Source
-* Example frontend for React 17: https://github.com/knowit/SSR.Net/tree/main/src/Frontend/React17Source
-* Example frontend for Vue 3: https://github.com/knowit/SSR.Net/tree/main/src/Frontend/Vue3Source
+* For .Net Framework: https://github.com/Knowit-Objectnet/SSR.Net/tree/main/src/SSR.Net.DotNetFramework
+* For .Net 8: https://github.com/Knowit-Objectnet/SSR.Net/tree/main/src/SSR.Net.DotNet8
+* Example frontend for React 18: https://github.com/Knowit-Objectnet/SSR.Net/tree/main/src/Frontend/React18Source
+* Example frontend for React 17: https://github.com/Knowit-Objectnet/SSR.Net/tree/main/src/Frontend/React17Source
+* Example frontend for Vue 3: https://github.com/Knowit-Objectnet/SSR.Net/tree/main/src/Frontend/Vue3Source
 
 To build frontend, just run the build scripts in package.json.
 
@@ -33,9 +33,9 @@ We will look at how to do this for React 18 and .Net 8 in the following chapters
 
 ### Building a JavaScript bundle fit for SSR
 
-We start by creating a bundle with some components. For React 18, there is an example here: https://github.com/knowit/SSR.Net/tree/main/src/Frontend/React18Source
+We start by creating a bundle with some components. For React 18, there is an example here: https://github.com/Knowit-Objectnet/SSR.Net/tree/main/src/Frontend/React18Source
 
-We will create a FrontPage component for this example (source code here: https://github.com/knowit/SSR.Net/blob/main/src/Frontend/React18Source/src/Components/FrontPage.tsx). 
+We will create a FrontPage component for this example (source code here: https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/Frontend/React18Source/src/Components/FrontPage.tsx). 
 
 ```
 import React, { useState } from "react";
@@ -80,7 +80,7 @@ export default FrontPage;
 This component has a simple expand/collapse function. This will show us that React is actually working interactively on the client side.
 
 We then create an entry point for our bundle. Here, we expose the React, ReactDOMServer and ReactDOMClient libraries as global variables. We also expose the components we've created. It works well to just import them all and add them to a global Components variable. See an example of how this is done here:
-https://github.com/knowit/SSR.Net/blob/main/src/Frontend/React18Source/src/app.tsx
+https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/Frontend/React18Source/src/app.tsx
 
 ```
 import * as React from 'react'
@@ -95,7 +95,7 @@ globalThis.ReactDOMClient = ReactDOMClient;
 globalThis.Components = {FrontPage, ArticlePage};
 ```
 
-In this simple example we use esbuild alone to build the bundle, but it's no problem to use Webpack. You can also use Vite, but you will need to turn off the built in minification and find a different way of minifying it, otherwise the global variables will be removed from the bundle during tree shaking. The esbuild command we use is in the package.json (https://github.com/knowit/SSR.Net/blob/main/src/Frontend/React18Source/package.json):
+In this simple example we use esbuild alone to build the bundle, but it's no problem to use Webpack. You can also use Vite, but you will need to turn off the built in minification and find a different way of minifying it, otherwise the global variables will be removed from the bundle during tree shaking. The esbuild command we use is in the package.json (https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/Frontend/React18Source/package.json):
 
 ```
   "scripts": {
@@ -110,14 +110,14 @@ We run this through npm:
 npm run build-dotnet8
 ```
 
-The resulting js bundle is built to the wwwroot folder in the DotNet8 project as react18example.js: https://github.com/knowit/SSR.Net/tree/main/src/SSR.Net.DotNet8/wwwroot
+The resulting js bundle is built to the wwwroot folder in the DotNet8 project as react18example.js: https://github.com/Knowit-Objectnet/SSR.Net/tree/main/src/SSR.Net.DotNet8/wwwroot
 
 ### Set up a web project
 
-Let's look at this example web project: https://github.com/knowit/SSR.Net/tree/main/src/SSR.Net.DotNet8
+Let's look at this example web project: https://github.com/Knowit-Objectnet/SSR.Net/tree/main/src/SSR.Net.DotNet8
 
 We have an extension method for adding a React18Renderer to IoC, which is the normal way of adding things to .Net Core and forward:
-https://github.com/knowit/SSR.Net/blob/main/src/SSR.Net.DotNet8/Services/ServiceCollectionExtensionsReact18SSR.cs
+https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/SSR.Net.DotNet8/Services/ServiceCollectionExtensionsReact18SSR.cs
 
 ```
 using JavaScriptEngineSwitcher.V8;
@@ -145,7 +145,7 @@ The code above adds both a server-side polyfill named React18TextEncoderPolyfill
 We use the V8 JavaScript engine in this example. This, and the scripts, is configured in a JavaScriptEnginePool. This pool will manage JavaScript engines, create new ones proactively, dispose exhausted engines and forward the rendering calls to the JavaScript engines. 
 
 To make this work, we have to reference some packages in our web project:
-https://github.com/knowit/SSR.Net/blob/main/src/SSR.Net.DotNet8/SSR.Net.DotNet8.csproj
+https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/SSR.Net.DotNet8/SSR.Net.DotNet8.csproj
 
 ``` 
     <PackageReference Include="JavaScriptEngineSwitcher.Core" Version="3.19.0" />
@@ -155,7 +155,7 @@ https://github.com/knowit/SSR.Net/blob/main/src/SSR.Net.DotNet8/SSR.Net.DotNet8.
     <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x86" Version="7.3.7" />
 ```
 
-After this is done, we call the extension method during the initialization of our program in Program.cs: https://github.com/knowit/SSR.Net/blob/main/src/SSR.Net.DotNet8/Program.cs
+After this is done, we call the extension method during the initialization of our program in Program.cs: https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/SSR.Net.DotNet8/Program.cs
 
 ```
 builder.Services.AddReact18Renderer(builder.Environment);
@@ -164,7 +164,7 @@ builder.Services.AddReact18Renderer(builder.Environment);
 
 ### Set up a controller and a view
 
-To do the actual Server-Side Rendering, we need to serialize props for the React component we want to Server-Side Render and send the props as JSON to the React18Renderer, together with the component name. In this simplified example, we do this directly in the controller (https://github.com/knowit/SSR.Net/blob/main/src/SSR.Net.DotNet8/Controllers/HomeController.cs). 
+To do the actual Server-Side Rendering, we need to serialize props for the React component we want to Server-Side Render and send the props as JSON to the React18Renderer, together with the component name. In this simplified example, we do this directly in the controller (https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/SSR.Net.DotNet8/Controllers/HomeController.cs). 
 
 First, we inject the React18Renderer in the controller (some lines are removed for brevity and clarity):
 
@@ -203,7 +203,7 @@ public ActionResult React18() {
 }
 ```
 
-The view is kept very simple (https://github.com/knowit/SSR.Net/blob/main/src/SSR.Net.DotNet8/Views/Home/React18.cshtml):
+The view is kept very simple (https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/SSR.Net.DotNet8/Views/Home/React18.cshtml):
 
 ```
 @using SSR.Net.Models;
