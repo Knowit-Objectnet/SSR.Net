@@ -2,13 +2,20 @@
 SSR.Net
 ============
 
-SSR.Net enables you to Server-Side Render (SSR) components in React 17, React 18, React 19 and Vue 3 in .Net Framework/Core/5/6/7/8/9. It is open for extension and can support other frontend frameworks. It aims at being a performant, minimalistic way to support SSR in .Net. 
+SSR.Net enables you to Server-Side Render (SSR) components in React 17, React 18, React 19 and Vue 3 in .Net Framework/8/9/10. It is open for extension and can support other frontend frameworks. It aims at being a performant, minimalistic way to support SSR in .Net. 
 
 It is based on many of the ideas in ReactJS.Net: https://github.com/reactjs/React.NET.
 
 **Table of Contents**
 
-[TOC]
+- [Installation](#installation)
+- [Configuration and usage](#configuration-and-usage)
+  - [Building a JavaScript bundle fit for SSR](#building-a-javascript-bundle-fit-for-ssr)
+  - [Set up a web project](#set-up-a-web-project)
+  - [Set up a controller and a view](#set-up-a-controller-and-a-view)
+- [Running the solution](#running-the-solution)
+- [Performance and scaling](#performance-and-scaling)
+- [Limitations and workarounds when doing SSR](#limitations-and-workarounds-when-doing-ssr)
 
 ## Installation
 This library can be installed through NuGet. You will also need to install a JavaScriptEngineSwitcher engine and native engine libraries according to your environment. 
@@ -16,8 +23,9 @@ This library can be installed through NuGet. You will also need to install a Jav
 ## Configuration and usage
 
 The easiest way to get started is to copy or look at one of the example projects:
+* For .Net 10: https://github.com/Knowit-Objectnet/SSR.Net/tree/main/src/SSR.Net.DotNet10
 * For .Net Framework: https://github.com/Knowit-Objectnet/SSR.Net/tree/main/src/SSR.Net.DotNetFramework
-* For .Net 8: https://github.com/Knowit-Objectnet/SSR.Net/tree/main/src/SSR.Net.DotNet8
+* Example frontend for React 19: https://github.com/Knowit-Objectnet/SSR.Net/tree/main/src/Frontend/React19Source
 * Example frontend for React 18: https://github.com/Knowit-Objectnet/SSR.Net/tree/main/src/Frontend/React18Source
 * Example frontend for React 17: https://github.com/Knowit-Objectnet/SSR.Net/tree/main/src/Frontend/React17Source
 * Example frontend for Vue 3: https://github.com/Knowit-Objectnet/SSR.Net/tree/main/src/Frontend/Vue3Source
@@ -25,19 +33,20 @@ The easiest way to get started is to copy or look at one of the example projects
 To build frontend, just run the build scripts in package.json.
 
 To configure and use SSR.Net, you need to do several things:
-* [Build a JavaScript bundle fit for SSR](#Building-a-JavaScript-bundle-fit-for-SSR)
+* [Build a JavaScript bundle fit for SSR](#building-a-javascript-bundle-fit-for-ssr)
 * [Set up a web project](#set-up-a-web-project)
-* [Set up a controller and a view](#Set-up-a-controller-and-a-view)
+* [Set up a controller and a view](#set-up-a-controller-and-a-view)
 
-We will look at how to do this for React 18 and .Net 8 in the following chapters. There are examples for React 17, React 18, React 19 and Vue 3 for both .Net Framework and .Net 8 in the code base. The examples in .Net 8 should be quite descriptive for .Net Core 2 and forward.
+We will look at how to do this for React 19 and .Net 10 in the following chapters. There are examples for React 17, React 18, React 19 and Vue 3 for both .Net Framework and .Net 10 in the code base. The examples in .Net 10 should be quite descriptive for .Net Core 2 and forward.
 
 ### Building a JavaScript bundle fit for SSR
 
-We start by creating a bundle with some components. For React 18, there is an example here: https://github.com/Knowit-Objectnet/SSR.Net/tree/main/src/Frontend/React18Source
+We start by creating a bundle with some components. For React 19, there is an example here: https://github.com/Knowit-Objectnet/SSR.Net/tree/main/src/Frontend/React19Source
 
-We will create a FrontPage component for this example (source code here: https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/Frontend/React18Source/src/Components/FrontPage.tsx). 
+We will create a FrontPage component for this example (source code here: https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/Frontend/React19Source/src/Components/FrontPage.tsx). 
 
 ```
+
 import React, { useState } from "react";
 
 interface Link {
@@ -75,12 +84,13 @@ const FrontPage = ({ header, links }: Props) => {
 
 export default FrontPage;
 
+
 ```
 
 This component has a simple expand/collapse function. This will show us that React is actually working interactively on the client side.
 
 We then create an entry point for our bundle. Here, we expose the React, ReactDOMServer and ReactDOMClient libraries as global variables. We also expose the components we've created. It works well to just import them all and add them to a global Components variable. See an example of how this is done here:
-https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/Frontend/React18Source/src/app.tsx
+https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/Frontend/React19Source/src/app.tsx
 
 ```
 import * as React from 'react'
@@ -95,115 +105,117 @@ globalThis.ReactDOMClient = ReactDOMClient;
 globalThis.Components = {FrontPage, ArticlePage};
 ```
 
-In this simple example we use esbuild alone to build the bundle, but it's no problem to use Webpack. You can also use Vite, but you will need to turn off the built in minification and find a different way of minifying it, otherwise the global variables will be removed from the bundle during tree shaking. The esbuild command we use is in the package.json (https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/Frontend/React18Source/package.json):
+In this simple example we use esbuild alone to build the bundle, but it's no problem to use Webpack or Rspack. You can also use Vite, but you will need to turn off the built in minification and find a different way of minifying it, otherwise the global variables will be removed from the bundle during tree shaking. The esbuild command we use is in the package.json (https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/Frontend/React19Source/package.json):
 
 ```
   "scripts": {
 ...
-    "build-dotnet8": "esbuild ./src/app.tsx --bundle --outfile=../../SSR.Net.DotNet8/wwwroot/react18example.js"
+    "build-dotnet10": "esbuild ./src/app.tsx --bundle --outfile=../../SSR.Net.DotNet10/wwwroot/react19example.js"
   },
 ```
 
 We run this through npm:
 
 ```
-npm run build-dotnet8
+npm run build-dotnet10
 ```
 
-The resulting js bundle is built to the wwwroot folder in the DotNet8 project as react18example.js: https://github.com/Knowit-Objectnet/SSR.Net/tree/main/src/SSR.Net.DotNet8/wwwroot
+The resulting js bundle is built to the wwwroot folder in the DotNet10 project as react19example.js: https://github.com/Knowit-Objectnet/SSR.Net/tree/main/src/SSR.Net.DotNet10/wwwroot
 
 ### Set up a web project
 
-Let's look at this example web project: https://github.com/Knowit-Objectnet/SSR.Net/tree/main/src/SSR.Net.DotNet8
+Let's look at this example web project: https://github.com/Knowit-Objectnet/SSR.Net/tree/main/src/SSR.Net.DotNet10
 
-We have an extension method for adding a React18Renderer to IoC, which is the normal way of adding things to .Net Core and forward:
-https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/SSR.Net.DotNet8/Services/ServiceCollectionExtensionsReact18SSR.cs
+We have an extension method for adding a React19Renderer to IoC, which is the normal way of adding things to .Net Core and forward:
+https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/SSR.Net.DotNet10/Services/ServiceCollectionExtensionsReact19SSR.cs
 
 ```
 using JavaScriptEngineSwitcher.V8;
 using SSR.Net.Services;
 
-namespace SSR.Net.DotNet8.Services
+namespace SSR.Net.DotNet10.Services
 {
-    public static class ServiceCollectionExtensionsReact18SSR
+    public static class ServiceCollectionExtensionsReact19SSR
     {
-        public static void AddReact18Renderer(this IServiceCollection services, IWebHostEnvironment webHostEnvironment)
+        public static void AddReact19Renderer(this IServiceCollection services, IWebHostEnvironment webHostEnvironment)
         {
             var pool = new JavaScriptEnginePool(new V8JsEngineFactory(), config =>
                 config
-                    .AddScriptFile(Path.Combine(webHostEnvironment.WebRootPath, "React18TextEncoderPolyfill.js"))
-                    .AddScriptFile(Path.Combine(webHostEnvironment.WebRootPath, "react18example.js"))
+                    .AddScriptFile(Path.Combine(webHostEnvironment.WebRootPath, "React19TextEncoderPolyfill.js"))
+                    .AddScriptFile(Path.Combine(webHostEnvironment.WebRootPath, "React19MessageChannelPolyfill.js"))
+                    .AddScriptFile(Path.Combine(webHostEnvironment.WebRootPath, "react19example.js"))
             );
-            services.AddSingleton(new React18Renderer(pool));
+            services.AddSingleton(new React19Renderer(pool));
         }
     }
 }
 ```
 
-The code above adds both a server-side polyfill named React18TextEncoderPolyfill.js (React 18 needs this, and it's missing in the Java Script Engine), and the bundle we created in [Building a JavaScript bundle fit for SSR](#Building-a-JavaScript-bundle-fit-for-SSR), react18example.js. These script files will be run on each server-side JavaScript engine during initialization. This means that each JavaScript engine on the server will be able to run React, ReactDOMServer, ReactDOMClient and access our FrontPage component through the global variable Components.
+The code above adds both two server-side polyfills named React19TextEncoderPolyfill.js and React19MessageChannelPolyfill.js (React 19 needs this, and it's missing in the Java Script Engine), and the bundle we created in [Building a JavaScript bundle fit for SSR](#building-a-javascript-bundle-fit-for-ssr), react19example.js. These script files will be run on each server-side JavaScript engine during initialization. This means that each JavaScript engine on the server will be able to run React, ReactDOMServer, ReactDOMClient and access our FrontPage component through the global variable Components.
 
 We use the V8 JavaScript engine in this example. This, and the scripts, is configured in a JavaScriptEnginePool. This pool will manage JavaScript engines, create new ones proactively, dispose exhausted engines and forward the rendering calls to the JavaScript engines. 
 
 To make this work, we have to reference some packages in our web project:
-https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/SSR.Net.DotNet8/SSR.Net.DotNet8.csproj
+https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/SSR.Net.DotNet10/SSR.Net.DotNet10.csproj
 
 ``` 
-    <PackageReference Include="JavaScriptEngineSwitcher.Core" Version="3.19.0" />
-    <PackageReference Include="JavaScriptEngineSwitcher.V8" Version="3.20.10" />
-    <PackageReference Include="Microsoft.ClearScript.Core" Version="7.3.7" />
-    <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x64" Version="7.3.7" />
-    <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x86" Version="7.3.7" />
+    <PackageReference Include="JavaScriptEngineSwitcher.Core" Version="3.31.0" />
+    <PackageReference Include="JavaScriptEngineSwitcher.V8" Version="3.34.1" />
+    <PackageReference Include="Microsoft.ClearScript.Core" Version="7.5.1" />
+    <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x64" Version="7.5.1" />
+    <PackageReference Include="Microsoft.ClearScript.V8.Native.win-x86" Version="7.5.1" />
 ```
 
-After this is done, we call the extension method during the initialization of our program in Program.cs: https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/SSR.Net.DotNet8/Program.cs
+After this is done, we call the extension method during the initialization of our program in Program.cs: https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/SSR.Net.DotNet10/Program.cs
 
 ```
-builder.Services.AddReact18Renderer(builder.Environment);
+builder.Services.AddReact19Renderer(builder.Environment);
 ```
 
 
 ### Set up a controller and a view
 
-To do the actual Server-Side Rendering, we need to serialize props for the React component we want to Server-Side Render and send the props as JSON to the React18Renderer, together with the component name. In this simplified example, we do this directly in the controller (https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/SSR.Net.DotNet8/Controllers/HomeController.cs). 
+To do the actual Server-Side Rendering, we need to serialize props for the React component we want to Server-Side Render and send the props as JSON to the React19Renderer, together with the component name. In this simplified example, we do this directly in the controller (https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/SSR.Net.DotNet10/Controllers/HomeController.cs). 
 
-First, we inject the React18Renderer in the controller (some lines are removed for brevity and clarity):
+First, we inject the React19Renderer in the controller (some lines are removed for brevity and clarity):
 
 ```
     public class HomeController : Controller {
-        private readonly React18Renderer _react18Renderer;
+        private readonly React19Renderer _react19Renderer;
 
-        public HomeController(React18Renderer react18Renderer)
+        public HomeController(React19Renderer react19Renderer)
         {
-            _react18Renderer = react18Renderer;
+            _react19Renderer = react19Renderer;
         }
 	...
 	}
 ```
 
-Then we add an action to the controller, where we serialize our model and let the React18Renderer create both the HTML and the initialization script. These are returned as a RenderedComponent from the React18Renderer, and passed on to the view:
+Then we add an action to the controller, where we serialize our model and let the React19Renderer create both the HTML and the initialization script. These are returned as a RenderedComponent from the React18Renderer, and passed on to the view:
 
 ```
-public ActionResult React18() {
+public ActionResult React19()
+{
     var propsJson = JsonConvert.SerializeObject(
         new {
-            header = "React 18 with SSR",
+            header = "React 19 with SSR",
             links = new[]{
                 new {
-                    text = "Google.com",
-                    href = "https://www.google.com"
+                    text = "Firefox",
+                    href = "https://www.firefox.com/"
                 },
                 new {
                     text = "Hacker news",
-                    href = "https://news.ycombinator.org"
+                    href = "https://news.ycombinator.com"
                 }
             }
         });
-    var renderedComponent = _react18Renderer.RenderComponent("Components.FrontPage", propsJson);
+    var renderedComponent = _react19Renderer.RenderComponent("Components.FrontPage", propsJson);
     return View(renderedComponent);
 }
 ```
 
-The view is kept very simple (https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/SSR.Net.DotNet8/Views/Home/React18.cshtml):
+The view is kept very simple (https://github.com/Knowit-Objectnet/SSR.Net/blob/main/src/SSR.Net.DotNet10/Views/Home/React19.cshtml):
 
 ```
 @using SSR.Net.Models;
@@ -217,8 +229,8 @@ The view is kept very simple (https://github.com/Knowit-Objectnet/SSR.Net/blob/m
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>React 18 with SSR</title>
-    <script src="~/react18example.js"></script>
+    <title>React 19 with SSR in DotNet 10</title>
+    <script src="~/react19example.js"></script>
 </head>
 <body>
     @Html.Raw(Model.Html)
@@ -227,23 +239,23 @@ The view is kept very simple (https://github.com/Knowit-Objectnet/SSR.Net/blob/m
 </html>
 ```
 
-Here we use a RenderedComponent as our model. We set Layout to null, because we only use the markup in this file. We include the react18example.js script that we created in [Building a JavaScript bundle fit for SSR](#Building-a-JavaScript-bundle-fit-for-SSR) in a <script> tag in the <head> tag. 
+Here we use a RenderedComponent as our model. We set Layout to null, because we only use the markup in this file. We include the react19example.js script that we created in [Building a JavaScript bundle fit for SSR](#building-a-javascript-bundle-fit-for-ssr) in a <script> tag in the <head> tag. 
 
 Inside the <body> tag, there are just two lines. The first one takes the HTML from our RenderedComponent and renders it as a raw string in the view. The second one takes the initialization script and renders it as a raw string inside a <script> tag. 
 
 ## Running the solution
 
-When running the solution and visiting the React 18 view, we see that it's working and that we can interact with it (clicking Expand links will expand the links):
+When running the solution and visiting the React 19 view, we see that it's working and that we can interact with it (clicking Expand links will expand the links):
 
-![React 18 in the browser](./React18InBrowser.png)
+![React 19 in the browser](./React19InBrowser.png)
 
 If we view the source, we see that we get markup from the server and not just an empty <div>.  We also see the initialization script, which instructs React to latch on to the <div> with the markup by calling ReactDOMClient.hydrateRoot:
 
-![React 18 view source](./React18ViewSource.png)
+![React 19 view source](./React19ViewSource.png)
 
 If the rendering was done without SSR, then the div would be empty and the initialization script would call ReactDOMClient.createRoot:
 
-![React 18 view source without SSR](./React18ViewSourceCSR.png)
+![React 19 view source without SSR](./React19ViewSourceCSR.png)
 
 ## Performance and scaling
 In order to be ready to render components quickly, SSR.Net ensures that a configurable number of JavaScript engines are initialized with a given JavaScript bundle. This is done when instantiating a new JavaScriptEnginePool. There are several thresholds controlling this:
@@ -255,21 +267,22 @@ In order to be ready to render components quickly, SSR.Net ensures that a config
 There are methods to configure this when initializing the JavaScriptEnginePool:
 
 ```
-            var pool = new JavaScriptEnginePool(new V8JsEngineFactory(), config =>
-                config
-                    .AddScriptFile(Path.Combine(webHostEnvironment.WebRootPath, "React18TextEncoderPolyfill.js"))
-                    .AddScriptFile(Path.Combine(webHostEnvironment.WebRootPath, "react18example.js"))
-                    .WithMinEngineCount(5)
-                    .WithStandbyEngineCount(3)
-                    .WithMaxEngineCount(25)
-                    .WithMaxUsagesCount(100)
-            );
-            services.AddSingleton(new React18Renderer(pool));
+var pool = new JavaScriptEnginePool(new V8JsEngineFactory(), config =>
+    config
+        .AddScriptFile(Path.Combine(webHostEnvironment.WebRootPath, "React19TextEncoderPolyfill.js"))
+        .AddScriptFile(Path.Combine(webHostEnvironment.WebRootPath, "React19MessageChannelPolyfill.js"))
+        .AddScriptFile(Path.Combine(webHostEnvironment.WebRootPath, "react19example.js")) 
+        .WithMinEngineCount(5)
+        .WithStandbyEngineCount(3)
+        .WithMaxEngineCount(25)
+        .WithMaxUsagesCount(100)
+);
+services.AddSingleton(new React19Renderer(pool));
 ```
 
 Example:
 
-Let's say we have configured a minimum of 5 engines, a maximum of 25 engines and 3 engines on standby. Before any requests come in, there will be 5 vacant engines. 
+Let's say we have configured a minimum of 5 engines, a maximum of 25 engines and 3 engines on standby. Before any requests come in, there will be 5 engines ready to serve. 
 Then 3 requests come in at the same time, occupying 3 engines. SSR.Net will see that there are only 2 engines on standby, and will initialize another engine to comply with the "3 engines on standby" requirement. 
 
 Traffic increases drastically, and at some point 23 engines are occupied concurrently. SSR.Net will ensure that there are 25 engines initialized, but will not exceed this threshold. This is to comply with the "maximum of 25 engines" requirement.

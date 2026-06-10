@@ -5,7 +5,7 @@ SSR.Net facilitates Server-Side Rendering (SSR) for React 17, React 18, React 19
 
 It is open for extension to support other JavaScript frameworks.
 
-It has DLLs for .Net Standard 2.0 and .Net 7/8/9 to support everything from .Net Framework to .Net 9. 
+It has DLLs for .Net Standard 2.0 and .Net 8/9/10 to support everything from .Net Framework to .Net 10. 
 
 Performance is optimized through proactive JavaScript engine preparation, engine reuse and smart scheduling.
 

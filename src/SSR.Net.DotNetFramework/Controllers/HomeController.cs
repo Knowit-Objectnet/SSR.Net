@@ -17,12 +17,12 @@ namespace SSR.Net.DotNetFramework.Controllers
                 header = "React 17 with SSR",
                 links = new[]{
                     new {
-                        text = "Google.com",
-                        href = "https://www.google.com"
+                        text = "Firefox",
+                        href = "https://www.firefox.com/"
                     },
                     new {
                         text = "Hacker news",
-                        href = "https://news.ycombinator.org"
+                        href = "https://news.ycombinator.com"
                     }
                 }
             });
@@ -35,12 +35,12 @@ namespace SSR.Net.DotNetFramework.Controllers
                 header = "React 18 with SSR",
                 links = new[]{
                     new {
-                        text = "Google.com",
-                        href = "https://www.google.com"
+                        text = "Firefox",
+                        href ="https://www.firefox.com/"
                     },
                     new {
                         text = "Hacker news",
-                        href ="https://news.ycombinator.org"
+                        href = "https://news.ycombinator.com"
                     }
                 }
             });
@@ -53,12 +53,12 @@ namespace SSR.Net.DotNetFramework.Controllers
                 header = "React 19 with SSR",
                 links = new[]{
                     new {
-                        text= "Google.com",
-                        href="https://www.google.com"
+                        text = "Firefox",
+                        href = "https://www.firefox.com/"
                     },
                     new {
                         text = "Hacker news",
-                        href="https://news.ycombinator.org"
+                        href="https://news.ycombinator.com"
                     }
                 }
             });

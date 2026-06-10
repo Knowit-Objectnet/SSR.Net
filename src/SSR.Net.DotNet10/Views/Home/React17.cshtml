@@ -1,4 +1,6 @@
-﻿@model SSR.Net.Models.RenderedComponent 
+﻿@using SSR.Net.Models;
+@model RenderedComponent
+
 @{
     Layout = null;
 }
@@ -8,8 +10,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>React 19 with SSR in DotNet Framework</title>
-    @Scripts.Render("/Frontend/react19example.js")
+    <title>React 17 with SSR in DotNet 10</title>
+    <script src="~/react17example.js"></script>
 </head>
 <body>
     @Html.Raw(Model.Html)

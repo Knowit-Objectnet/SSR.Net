@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net7.0;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net8.0;net9.0;net10.0</TargetFrameworks>
     <PackageId>SSR.Net</PackageId>
-    <Version>1.1.3</Version>
+    <Version>1.2.0</Version>
     <Authors>Øivind Hagen</Authors>
     <Company>Knowit AS</Company>
     <Product>SSR.Net</Product>
@@ -15,7 +15,7 @@
     <PackageDescription>
 			SSR.Net facilitates Server-Side Rendering (SSR) for React 17, React 18, React 19, and Vue 3 using JavaScriptEngineSwitcher.Core.
 			It is open for extension to support other JavaScript frameworks.
-			It has DLLs for .Net Standard 2.0 and .Net 7/8/9 to support everything from .Net Framework to .Net 9.
+			It has DLLs for .Net Standard 2.0 and .Net 8/9/10 to support everything from .Net Framework to .Net 10.
 			Performance is optimized through proactive JavaScript engine preparation, engine reuse and smart scheduling.
 			See examples and read more in the documentation on GitHub: https://github.com/Knowit-Objectnet/SSR.Net
 			It is based on many of the ideas in ReactJS.Net: https://github.com/reactjs/React.NET
@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="JavaScriptEngineSwitcher.Core" Version="3.24.1" AllowedVersions="3.19,4.0)" />
+    <PackageReference Include="JavaScriptEngineSwitcher.Core" Version="3.31.0" AllowedVersions="3.19,4.0)" />
   </ItemGroup>
 
   <ItemGroup>
